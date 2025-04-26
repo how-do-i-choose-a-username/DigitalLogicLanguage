@@ -1,0 +1,10 @@
+#   Returns<1011>
+
+#   When setting to a function it sets a global variable via reflection
+<< function 1001 return // // ? 101 = return >>
+
+#   Set a value to the function
+1 ? 1001 = 1011
+
+#   Return the variable that was set withing the function
+ReflectionSetToFunction.dl = ? 101

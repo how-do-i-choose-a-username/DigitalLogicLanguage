@@ -1,0 +1,14 @@
+#   Returns<101>
+#   This test isnt very good
+#   Read a global variable from index 1
+var = ? 1
+#   If var is not '101', then run Conditional, which will set a value to index 1
+Conditional | var = 101 
+
+FunctionMainlineRecursion.dl = ? 1
+
+<< Conditional return // // 
+? 1 = return
+#   Recall the mainline
+1 ? 0
+>>

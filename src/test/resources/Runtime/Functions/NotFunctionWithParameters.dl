@@ -1,0 +1,5 @@
+#   Returns<10>
+
+<< Function return p1 p2 p3 // return = ! p2 >>
+
+NotFunctionWithParameters.dl = ! Function 1001 10 10011

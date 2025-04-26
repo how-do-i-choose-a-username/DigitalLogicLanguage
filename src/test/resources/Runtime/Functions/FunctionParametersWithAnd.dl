@@ -1,0 +1,5 @@
+#   Returns<1010>
+
+<< Function return p1 p2 p3 // return = p1 >>
+
+FunctionParametersWithAnd.dl = Function 1111 & 101010 10 11

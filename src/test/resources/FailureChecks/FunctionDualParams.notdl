@@ -1,0 +1,4 @@
+<< Function return param1 param2 >>
+
+#   This would be nice to implement as a feature, but until then its part of the specification and unallowed
+hello = Function 10 11

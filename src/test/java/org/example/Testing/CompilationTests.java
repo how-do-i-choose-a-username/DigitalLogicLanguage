@@ -1,12 +1,17 @@
 package org.example.Testing;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import org.example.Runtime.LanguageConstants;
 import org.example.Compilation.LanguageParser;
 import org.example.Language.StatementProgram;
 import org.example.Support.Support;
+
+import javax.annotation.processing.SupportedSourceVersion;
 
 //  This script is messy, but it mostly works. I cant be bothered working on it more, testing the test script is hard
 /*
@@ -25,20 +30,26 @@ class CompilationTests
      */
     public static int runCompilerTests()
     {
-        CompilationTests runner = new CompilationTests();
-        String directorPath = "CompilationTests/";
-        runCompilerTestsInternal(directorPath, runner);
+        try {
+            // Annoying Java code to read the compilation test resources
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Path path = Paths.get(classLoader.getResource(".").toURI());
 
-        try
-        {
-            //  Wait for all the threads to finish
-            for (Thread thread : runner.threads)
-            {
-                thread.join();
+            CompilationTests runner = new CompilationTests();
+            String directorPath = path.toAbsolutePath().toString();
+            runCompilerTestsInternal(directorPath, runner);
+
+            try {
+                //  Wait for all the threads to finish
+                for (Thread thread : runner.threads) {
+                    thread.join();
+                }
+            } catch (InterruptedException e) {
+                TestsRunnerMain.logFailure("Failed while waiting for all the threads to finish\n" + e.toString());
             }
-        } catch (InterruptedException e)
-        {
-            TestsRunnerMain.logFailure("Failed while waiting for all the threads to finish\n" + e.toString());
+        } catch (URISyntaxException e){
+            System.out.println(e.toString());
+            TestsRunnerMain.logFailure("An exception occurred while fetching the tests to run\n" + e.toString());
         }
 
         return testCount;
@@ -57,7 +68,7 @@ class CompilationTests
             {
                 if (child.isDirectory())
                 {
-                    runCompilerTestsInternal(path + child.getName() + "/", runner);
+                    runCompilerTestsInternal(child.getAbsolutePath(), runner);
                 }
                 else if (child.getName().endsWith(LanguageConstants.sourceFileExtension)
                         || child.getName().endsWith(LanguageConstants.failureTestSourceExtension))
@@ -65,7 +76,7 @@ class CompilationTests
                     testCount += 1;
 
                     //  Create a new thread, then run it
-                    Thread newThread = new Thread(runner.new SingleTestRun(child, path), child.getName());
+                    Thread newThread = new Thread(runner.new SingleTestRun(child), child.getName());
                     newThread.start();
                     runner.threads.add(newThread);
                 }
@@ -80,13 +91,11 @@ class CompilationTests
     public class SingleTestRun implements Runnable
     {
         private File child;
-        private String path;
 
         //  Constructor
-        public SingleTestRun(File child, String path)
+        public SingleTestRun(File child)
         {
             this.child = child;
-            this.path = path;
         }
 
         /*
@@ -115,7 +124,7 @@ class CompilationTests
             {
                 String targetValue = findTargetValue(child);
 
-                String fileName = path + child.getName();
+                String fileName = child.getAbsolutePath();
 
                 StatementProgram loadedProgram = compileToProgram(fileName);
 
@@ -135,7 +144,7 @@ class CompilationTests
         {
             try
             {
-                String fileName = path + child.getName();
+                String fileName = child.getAbsolutePath();
                 LanguageParser.parseFile(fileName).getValueObject();
 
                 String message = "Invalid file compiled and run '" + fileName + "'";

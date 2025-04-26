@@ -1,0 +1,5 @@
+# Returns<false>
+
+# Test that we can just have an operator as an expression
+1 & 11
+ExpressionNoSet.dl = 0

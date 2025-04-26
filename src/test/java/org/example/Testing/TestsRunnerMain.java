@@ -8,10 +8,22 @@ class TestsRunnerMain
     private static int failures = 0;
     private static String errorFileMessage = "";
 
+    public static int getFailures() {
+        return failures;
+    }
+
+    public static int getTestCount() {
+        return testCount;
+    }
+
     public static void main(String[] args)
     {
         if (args.length == 0)
         {
+            testCount = 0;
+            failures = 0;
+            errorFileMessage = "";
+
             long startTime = System.nanoTime();
             testCount += LanguageTests.runBasicTests();
 

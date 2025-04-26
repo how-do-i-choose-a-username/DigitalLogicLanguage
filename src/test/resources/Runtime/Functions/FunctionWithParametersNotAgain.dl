@@ -1,0 +1,5 @@
+#   Returns<true>
+
+<< Function return p1 p2 p3 // return = p1 >>
+
+FunctionWithParametersNotAgain.dl = Function ! 0 10 11

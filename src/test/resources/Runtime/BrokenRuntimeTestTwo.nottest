@@ -1,0 +1,3 @@
+# Returns<false>
+# This file never sets to its return value
+hello = ! hello

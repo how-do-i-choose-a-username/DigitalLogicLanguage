@@ -1,0 +1,4 @@
+#   Returns<1010>
+#   This works because the # is not space seperated
+##Hello = 1010
+ExpressionNotBlockComment.dl = ##Hello

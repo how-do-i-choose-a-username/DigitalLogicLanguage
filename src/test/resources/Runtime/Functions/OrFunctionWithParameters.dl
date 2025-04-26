@@ -1,0 +1,5 @@
+#   Returns<1111>
+
+<< Function return p1 p2 p3 // return = p2 >>
+
+OrFunctionWithParameters.dl = 1010 | Function 10 101 11

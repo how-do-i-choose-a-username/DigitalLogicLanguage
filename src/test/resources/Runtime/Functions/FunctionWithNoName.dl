@@ -1,0 +1,5 @@
+# Returns<101>
+
+<< 100 return // return = 101 // >>
+
+FunctionWithNoName.dl = 1 ? 100

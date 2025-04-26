@@ -1,0 +1,2 @@
+#   When this test was written it broke because the element length stagnated, because tokens were completed but not absorbed
+<< ECHO return // // ( _ ) & ECHO = _ >>

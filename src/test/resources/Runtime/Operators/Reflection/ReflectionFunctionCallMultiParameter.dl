@@ -1,0 +1,8 @@
+#   Returns<1001>
+
+? 1  =  1111
+? 10 = 11001
+
+<< Function 1000 return param1 param2 // return = param1 & param2 >>
+
+ReflectionFunctionCallMultiParameter.dl = 1 ? 1000

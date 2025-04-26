@@ -1,0 +1,6 @@
+# Returns<10101>
+
+<< Function 101 return // return = 10101 >>
+
+#   First variable to the reflection operator tells it where to find parameters, the second is the function ID
+ReflectionBasicFunctionCall.dl = 1 ? 101

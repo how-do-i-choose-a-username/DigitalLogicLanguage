@@ -1,0 +1,3 @@
+#   Returns<10>
+#   Bit shifts the value all the way on the right, just about here. Shifts it left by one
+( ! 1 ) : BitShift.dl = 01111111111111111111111111111111 : 1

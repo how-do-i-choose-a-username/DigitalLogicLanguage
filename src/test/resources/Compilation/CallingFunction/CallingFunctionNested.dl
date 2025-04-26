@@ -1,0 +1,4 @@
+hello = Func1 Func2 hello
+
+<< Func1 Return Param1 // // >>
+<< Func2 Return Param1 // // >>

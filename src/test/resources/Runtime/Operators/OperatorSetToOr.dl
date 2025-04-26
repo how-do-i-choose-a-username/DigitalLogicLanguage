@@ -1,0 +1,4 @@
+# Returns<101>
+# Constants should usually never be on the setting side of an equation, 
+# but its here as part of the test, and should never receive a value
+OperatorSetToOr.dl | 100 = 101

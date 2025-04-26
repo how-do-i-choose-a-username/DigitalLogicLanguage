@@ -1,0 +1,7 @@
+#   Returns<100>
+
+<< Function return a b // //
+    a = 100
+>>
+
+FunctionSetParameters.dl Function 10 = 100

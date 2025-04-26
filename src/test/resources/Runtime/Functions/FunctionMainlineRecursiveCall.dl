@@ -1,0 +1,21 @@
+#   Returns<true>
+
+#   Left shift function
+<< <- return param1 // ! 1 : return = param1 >>
+
+#   Global variable
+<< globalVar return // return = ? // ? = return >>
+
+<< setToGetMainline // // 1 ? >>
+
+#   Shift value to the left
+globalVar = <- globalVar
+
+#   Set global var to globalVar or one
+globalVar = globalVar | 1
+
+#   While global var is not true, recall this function
+setToGetMainline | globalVar = ! 0
+
+#   Output value
+FunctionMainlineRecursiveCall.dl = globalVar

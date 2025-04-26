@@ -1,0 +1,2 @@
+#   This is undefined behaviour that just so happens to compile in my implementation
+hello = there & << world return >> world

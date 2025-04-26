@@ -1,0 +1,8 @@
+# Returns<111>
+
+#   Put a variable at the index 11
+? 11 = 111
+
+<< Function 1001 return param1 // return = param1 >>
+
+ReflectionFunctionCallParameter.dl = 11 ? 1001

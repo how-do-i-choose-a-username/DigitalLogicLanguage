@@ -1,0 +1,8 @@
+#   Returns<11111>
+
+# Test that we can set values to functions
+<< FunctionTest return // // ? = return >>
+FunctionTest = 11111
+
+# Use reflection to make sure that we set the correct value
+FunctionSetToTest.dl = ?

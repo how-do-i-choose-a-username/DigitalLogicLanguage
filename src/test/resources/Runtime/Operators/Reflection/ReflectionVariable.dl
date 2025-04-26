@@ -1,0 +1,5 @@
+# Returns<1010>
+#   Test that we can put a value into the reflection operator, and get it back again
+variableLocation = 10001
+? variableLocation = 1010
+ReflectionVariable.dl = ? variableLocation
