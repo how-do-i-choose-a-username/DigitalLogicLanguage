@@ -1,0 +1,14 @@
+This file provides some information on the compilation process, and a brief overview on how it runs
+
+The compiler starts by tokenising the file. 
+It then sifts through the tokens, and finds all the functions, and builds an object which stores information about them.
+Then the mainline function is added to the start of the list of functions, these are all the tokens not in a function.
+The next step is to compile every expression in every function, which includes the mainline.
+This is done on either side of the expression separately, where an algorithm based on the infix to postfix algorithm is used to convert the sides of the expression into a tree, where operators own other operators and values.
+This temporary tree structure is then converted to a dedicated tree structure with all the appropriate methods to execute the program.
+This tree structure is used to build real expression objects, which are then used to build function objects.
+A StatementProgram is then created, which has an array of all the functions, and a reference to the mainline function, this is then returned to the calling program.
+
+The runtime works on a system of statements. Each type of operator has a statement, such as variables, operators, functions and constants. These are used to build a tree structure, which in turn make up an expression, which makes up a function, which is itself encapsulated in a statement. When a value is calculated from the program, a method call is run on the statement, which then typically calls another method to get value, until it gets to a constant or variable, which return the value that they hold, which works its way back up the method calls. 
+
+tl;dr The language uses a tree structure and recursion to calculate a value.

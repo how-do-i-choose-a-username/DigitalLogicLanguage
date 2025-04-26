@@ -1,0 +1,19 @@
+This document outlines the tools used in this project. Internally, there is a test script but this is not available to use in the built jar. The available entry point is the language runtime script.
+LanguageRuntime is to run the programs that are written in Digital Logic. It has a variety of command line options it can be configured with. 
+All flags start with the '-' character, then have a single character specifying which flag it is. Any value that goes with the flag must be seperated by a space. The filepath argument can set with or without its corresponding flag.
+The command to run the built jar file is 'java -jar DigitalLogic.jar', this program was developed on Java version 17.0.2. Both macOS and Windows are supported.
+Due to the recursive nature of Digital Logic, you may need to modify the Java stack size. '-Xss4M' is the flag to do that, inserted before the java file being run. The M indicates megabytes, this can be gigabytes. The 4 is how many megabytes to allocate.
+Please note, when running the provided .jar file it will automatically create a file called 'terminal.dll' on windows and 'libterminal.dylib' on macos. This is a native library file and is required to run Digital Logic code.
+
+List of flags:
+-f Specifies that the next value is the file to load, must be followed by a file path.
+-t Manual override for the file that is being loaded. The default value is DetectType, but this can be used to override what type of file is being loaded, to, for example, load a DigitalLogic file from a file ending in '.txt'. The available options are DetectType, Source, and Compiled.
+-m Change the mode that the compiler is running in. Default mode is RunFile, which simply loads the provided file and runs it. The other available options are Compile and Automatic. Compile is to load the provided file and save it as a serialised Java file, which saves recompiling it each time it is run. The last mode is Automatic, which is unimplemented.
+-c Use compiler checks when compiling. Compiler checks take time, and this can be disabled with caution to compile code faster. This does not disable all the compiler checks, only the ones run after the compilation. Some checks are still run during the compilation process. It is a boolean flag, so can be used with no value to toggle it, or specify a value manually by providing a value of 'on' or 'off'. Defaults to on.
+-Z Optimise code flag, pre runs segments of the code after compilation to run it faster when loaded again later, only really useful when compiling the source. Unimplemented. It's a Boolean flag. Defaults to off
+-w Silence warning messages from the compilation process. It's a Boolean flag. Defaults to off.
+-s Strip code flag, removes any unused functions from the compiled code. Use caution since it is unable to detect function calls via reflection. It's a Boolean flag. Defaults to off.
+-p Print state flag. Prints the state of all flags in the flag manager before the program is run, useful for debugging. It's a Boolean flag. Defaults to off.
+-d Debugging enabled. While compiling the code, output to the terminal what is happening, useful for debugging the compiler and potentially useful for debugging code. It's a Boolean flag. Defaults to off.
+-r Show results. Show results when the program is finished if the program specifies an output. It's a Boolean flag. Defaults to on.
+-T Show how long the compilation and runtime of a given program took. It's a Boolean flag. Defaults to off.

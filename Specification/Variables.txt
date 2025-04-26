@@ -1,0 +1,6 @@
+A variable is any token that isn't a built-in token, a constant, or defined as a function name. They are used to hold values, return values from the program or individual functions, and as parameters to functions.
+When a variable is retrieved from it returns its stored value, if there is no stored value it returns 0. When setting to a variable it stores the value that is set to it, which can be retrieved later. Variables are usable with operators, or functions, as you would expect a variable to work.
+A variable is a bit string of length 32 (technically a 32-bit integer under the hood).
+Variables are passed to operators by value. When getting from a function variables are passed by value, but when setting to a function they are passed by reference.
+Global variables are available using the reflection operator. See the Operators documentation for more detail.
+Variables do not need declaration before use.

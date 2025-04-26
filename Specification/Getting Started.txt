@@ -1,0 +1,15 @@
+Getting started with Digital Logic
+
+Digital Logic, written by Matthew Backhouse beginning on the 9th November 2022
+This documentation is written to allow both usage of the language, and an overview of the runtime implementation
+Supports macOS and Windows 10.
+
+Basics. 
+A digital logic program has the file extension of '.dl'. The compiled version has the extension '.dlc'. There are no other restrictions on the file name, but it is recommended that it does not contain spaces (more details later).
+A Digital Logic file is built around the concept of tokens, each token must be seperated by a space. Tokens are used to build expressions and functions which can then be executed. Tokens can be made of any character provided that it dosnt include blank spaces (newlines, tab, space, etc.)
+Tokens can be operators, functions, intermediate, constants, or variables.
+Expressions have a left hand side and a right hand side, seperated by the '=' token. The value on the right is calculated, and assigned to the left hand side. An example expression is 'variable = 1010'.
+Either side of an expression can be a composite expression of many more tokens, these are used to build more complicated ideas such as 'A and not B' represented in Digital Logic by the expression 'A & ! B'. Notice how every operator is seperated by a space, this is critical, because it tells the compiler that these are separate operators. The most basic operators are and '&', not '!' and or '|'.
+Functions are called in the same way as operators are, function declarations are covered in more detail later on.
+A unique thing about Digital Logic is that any function or operator can be retried from, or assigned to. The exact details of this are covered in more detail later, but a quick example is the '&' operator. When assigned to, the value provided is assigned to both of the operators sides.
+A Digital Logic program returns a value after running. This value is retrieved from the variable with the same name as the file. More about variables later on.

@@ -1,0 +1,66 @@
+Digital Logic is awesome!
+
+To run a Digital Logic file, start by opening the folder which contains the jar file
+Then, run the command 'java -jar DigitalLogic.jar' followed by the path to the .dl or .dlc file you want to run
+
+See the following examples for Digital Logic programming 1100101.
+
+Assigning the variable 'hello' the constant value of '101'
+hello = 101
+
+Reading a single character from the user into the variable 'hello'
+hello = _
+
+Make sure that all operators, variables, equals signs etc. are seperated by a space
+
+'And' operator example
+a = b & c
+
+The basic operators to start with are 'and &', 'or |', 'not !', and 'terminal _'
+
+#   This is a Digital Logic comment
+
+## 
+This is a comment in a block
+See? It goes for multiple lines
+##
+
+Output the character 'A' (uses ascii codes)
+_ = 01000001
+
+#   Hello world program in Digital Logic
+_ = 01001000    # H
+_ = 01100101    # e
+_ = 01101100    # l
+_ = 01101100    # l
+_ = 01101111    # o
+_ = 00100000    # space
+_ = 01010111    # W
+_ = 01101111    # o
+_ = 01110010    # r
+_ = 01101100    # l
+_ = 01100100    # d
+_ = 00100001    # !
+#   End of the Hello World program
+
+Functions are cool! A function is declared like so
+<< FunctionName ReturnValue Parameter1 Parameter2 // // >>
+
+Functions can have any number of parameters (including none)
+Functions can have any name that is not already in use
+
+The center block of function is to get a value (which was assigned to the return value)
+<< True Return // Return = ! 0 // >>
+#   This is how to call the function that we just wrote
+variable = True
+
+The last block is to set a value. The set value is retrieved from the return value
+<< output value // // _ = value >>
+#   And now we call the function by setting to it
+output = 01000001
+
+Check out the operators page for all the cool stuff they can do!
+
+Check out the examples folder for a bunch of code of varying difficulty levels
+
+Check out the specification for more details!
