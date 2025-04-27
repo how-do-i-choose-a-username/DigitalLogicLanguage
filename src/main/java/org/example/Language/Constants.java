@@ -46,9 +46,4 @@ public class Constants
 
     //  Function start ID
     public static final int userSpaceFunctionIDs = 1;
-
-    public static String getFileSeperator()
-    {
-        return System.getProperty("file.separator");
-    }
 }

@@ -1,6 +1,6 @@
 package org.example.Language;
 
-import org.example.JavaJNI.Terminal;
+import org.example.Runtime.TerminalHandler;
 
 /*
  * Statement for the single parameter builtins.
@@ -35,7 +35,7 @@ public class StatementSoloBuiltin extends StatementBuiltinBase
         case Constants.terminalStatement:
             if ((firstInt & 1) == 0)
             {
-                result = Terminal.getCharFromTerminal();
+                result = TerminalHandler.getCharFromTerminal();
             }
             break;
         default:

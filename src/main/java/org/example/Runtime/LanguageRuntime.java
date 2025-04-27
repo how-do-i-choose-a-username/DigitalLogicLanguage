@@ -1,7 +1,6 @@
 package org.example.Runtime;
 
 import org.example.Compilation.*;
-import org.example.JavaJNI.Terminal;
 import org.example.Language.*;
 import org.example.Support.*;
 
@@ -204,7 +203,7 @@ public class LanguageRuntime
      */
     private static Integer runStatement(StatementProgram statement)
     {
-        Terminal.initaliseTerminal();
+        TerminalHandler.initialiseTerminal();
         Integer result = null;
 
         //  Add some code to run at shutdown, this is to fix the command line if I force quit the program
@@ -214,7 +213,7 @@ public class LanguageRuntime
             public void run()
             {
                 System.out.println();
-                Terminal.packupTerminal();
+                TerminalHandler.packupTerminal();
             }
         });
 
@@ -223,11 +222,11 @@ public class LanguageRuntime
             result = statement.getValueObject();
         } catch (Exception e)
         {
-            printMessage("A fatal error occured while running the requested program " + e.toString());
+            printMessage("A fatal error occurred while running the requested program " + e.toString());
         }
 
         //  Also there is this line to re enable the buffer if the program exits like usual
-        Terminal.packupTerminal();
+        TerminalHandler.packupTerminal();
 
         return result;
     }

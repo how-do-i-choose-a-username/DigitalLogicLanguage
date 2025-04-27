@@ -1,6 +1,7 @@
 package org.example.Compilation;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 
 import org.example.Language.*;
@@ -39,8 +40,7 @@ public class LanguageParser
         }
 
         //  Construct the function details for the mainline
-        String fileNameEnd = parameters.getFileToLoad()
-                .substring(parameters.getFileToLoad().lastIndexOf(Constants.getFileSeperator()) + 1);
+        String fileNameEnd = Paths.get(parameters.getFileToLoad()).getFileName().toString();
         Debugger.logMessage("File name for return value", fileNameEnd);
         FunctionDetails mainlineFuncDetails = new FunctionDetails("", fileNameEnd, 0, new String[0],
                 tokens.toArray(new String[0]), new String[0]);
