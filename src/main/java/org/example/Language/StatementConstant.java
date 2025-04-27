@@ -5,7 +5,7 @@ package org.example.Language;
  */
 public class StatementConstant extends StatementBase
 {
-    private int value;
+    private final int value;
 
     public StatementConstant(int value)
     {

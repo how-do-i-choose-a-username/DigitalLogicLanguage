@@ -7,21 +7,21 @@ import org.example.Language.Function;
  */
 class FunctionDetails
 {
-    private String functionName;
-    private String returnName;
+    private final String functionName;
+    private final String returnName;
     private int ID;
-    private String[] paramterNames;
-    //  Because a function can be both written to and from, we need seperate get and set sections
-    private String[] getTokens;
-    private String[] setTokens;
+    private final String[] parameterNames;
+    //  Because a function can be both written to and from, we need separate get and set sections
+    private final String[] getTokens;
+    private final String[] setTokens;
 
     //  Constructor
-    public FunctionDetails(String functionName, String returnName, int ID, String[] paramterNames, String[] getTokens, String[] setTokens)
+    public FunctionDetails(String functionName, String returnName, int ID, String[] parameterNames, String[] getTokens, String[] setTokens)
     {
         this.functionName = functionName;
         this.returnName = returnName;
         this.ID = ID;
-        this.paramterNames = paramterNames;
+        this.parameterNames = parameterNames;
         this.getTokens = getTokens;
         this.setTokens = setTokens;
     }
@@ -29,9 +29,9 @@ class FunctionDetails
     /*
      * Creates a real function object with basic information from this function details object
      */
-    public Function getFuntionFromDetails()
+    public Function getFunctionFromDetails()
     {
-        return new Function(functionName, paramterNames, returnName, ID);
+        return new Function(functionName, parameterNames, returnName, ID);
     }
 
     public String getFunctionName()
@@ -54,9 +54,9 @@ class FunctionDetails
         this.ID = ID;
     }
 
-    public String[] getParamterNames()
+    public String[] getParameterNames()
     {
-        return this.paramterNames;
+        return this.parameterNames;
     }
 
     public String[] getGetTokens()
@@ -75,9 +75,9 @@ class FunctionDetails
         result += getFunctionName() + " ID " + getID() + "\n";
         result += "Return name " + getReturnName() + "\n";
         result += "Parameters ";
-        for (int i = 0; i < getParamterNames().length; i++)
+        for (int i = 0; i < getParameterNames().length; i++)
         {
-            result += getParamterNames()[i] + " ";
+            result += getParameterNames()[i] + " ";
         }
         result += "\nGetter tokens ";
         for (int i = 0; i < getGetTokens().length; i++)

@@ -5,7 +5,7 @@ import org.example.Language.*;
 import org.example.Support.*;
 
 /*
- * This class is responsible for running Digital Logic programs for the user, its called via the command line.
+ * This class is responsible for running Digital Logic programs for the user, it's called via the command line.
  */
 public class LanguageRuntime
 {
@@ -55,7 +55,7 @@ public class LanguageRuntime
                     saveToCompiled(statementProgram, flags);
                 }
 
-                //  Run if thats what we want to do
+                //  Run if that's what we want to do
                 if (flags.getWhatToDo() == CompilerMode.RunFile && statementProgram != null)
                 {
                     long runStartTime = System.nanoTime();
@@ -131,7 +131,7 @@ public class LanguageRuntime
             Debugger.defaultSettings();
         } catch (Exception e)
         {
-            printMessage("Failed to compile the specified file\n" + e.toString());
+            printMessage("Failed to compile the specified file\n" + e);
         }
         return statementProgram;
     }
@@ -159,7 +159,7 @@ public class LanguageRuntime
     private static String sourceToCompiledName(String sourceName)
     {
         String result = "";
-        //  If we have a compiled file name, we dont need to do anything
+        //  If we have a compiled file name, we don't need to do anything
         if (sourceName.endsWith(LanguageConstants.compiledFileExtension))
         {
             result = sourceName;
@@ -198,7 +198,7 @@ public class LanguageRuntime
     }
 
     /*
-     * Actually run the loaded Digital Logic program. Has methods to setup and
+     * Actually run the loaded Digital Logic program. Has methods to set up and
      * packup the terminal as necessary.
      */
     private static Integer runStatement(StatementProgram statement)
@@ -207,25 +207,20 @@ public class LanguageRuntime
         Integer result = null;
 
         //  Add some code to run at shutdown, this is to fix the command line if I force quit the program
-        Runtime.getRuntime().addShutdownHook(new Thread()
-        {
-            @Override
-            public void run()
-            {
-                System.out.println();
-                TerminalHandler.packupTerminal();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println();
+            TerminalHandler.packupTerminal();
+        }));
 
         try
         {
             result = statement.getValueObject();
         } catch (Exception e)
         {
-            printMessage("A fatal error occurred while running the requested program " + e.toString());
+            printMessage("A fatal error occurred while running the requested program " + e);
         }
 
-        //  Also there is this line to re enable the buffer if the program exits like usual
+        //  Also there is this line to re-enable the buffer if the program exits like usual
         TerminalHandler.packupTerminal();
 
         return result;

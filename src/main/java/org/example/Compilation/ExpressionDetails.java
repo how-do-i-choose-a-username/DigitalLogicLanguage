@@ -6,8 +6,8 @@ package org.example.Compilation;
  */
 class ExpressionDetails
 {
-    public String[] setterTokens;
-    public String[] getterTokens;
+    public final String[] setterTokens;
+    public final String[] getterTokens;
 
     public ExpressionDetails(String[] setterTokens, String[] getterTokens)
     {

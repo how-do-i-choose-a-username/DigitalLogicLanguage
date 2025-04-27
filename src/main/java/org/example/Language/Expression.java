@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class Expression implements Serializable
 {
-    private StatementBase toSet;
-    private StatementBase toGet;
+    private final StatementBase toSet;
+    private final StatementBase toGet;
 
     //  Constructor
     public Expression(StatementBase toSet, StatementBase toGet)
@@ -19,7 +19,7 @@ public class Expression implements Serializable
 
     /*
      * Evaluate this expression. Gets a value from the get statement, then sets
-     * it to the set statement. Thats all this method does.
+     * it to the set statement. That's all this method does.
      */
     public void evaluate(StatementProgram program, FunctionRunner function) throws Exception
     {

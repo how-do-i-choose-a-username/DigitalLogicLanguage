@@ -48,7 +48,7 @@ public class LanguageParser
         //  Get the function details from the tokens
         List<FunctionDetails> funcDetailsList = findFunctionTokens(tokens);
         //  Insert the mainline function at the start of the list
-        funcDetailsList.add(0, mainlineFuncDetails);
+        funcDetailsList.addFirst(mainlineFuncDetails);
 
         FunctionDetails[] functionDetails = funcDetailsList.toArray(new FunctionDetails[0]);
         Function[] functions = new Function[functionDetails.length];
@@ -56,7 +56,7 @@ public class LanguageParser
         //  Partially construct all the actual functions
         for (int i = 0; i < functions.length; i++)
         {
-            functions[i] = functionDetails[i].getFuntionFromDetails();
+            functions[i] = functionDetails[i].getFunctionFromDetails();
         }
 
         //  Foreach function (Which includes the mainline)
@@ -103,7 +103,7 @@ public class LanguageParser
      */
     private static List<String> tokeniseFile(FlagManager flagManager)
     {
-        ArrayList<String> tokens = new ArrayList<String>(100);
+        ArrayList<String> tokens = new ArrayList<>(100);
 
         try
         {
@@ -150,10 +150,9 @@ public class LanguageParser
 
                 //  Guarantee that the last token in the file is a new line
                 //  This is depended on by other functions in this file
-                if ((tokens.size() >= 1 && !tokens.get(tokens.size() - 1).equals(Constants.lineSeperatorToken))
-                        || tokens.size() == 0)
+                if (tokens.isEmpty() || !tokens.getLast().equals(Constants.lineSeparatorToken))
                 {
-                    tokens.add(Constants.lineSeperatorToken);
+                    tokens.add(Constants.lineSeparatorToken);
                 }
             }
 
@@ -175,7 +174,7 @@ public class LanguageParser
      */
     private static List<FunctionDetails> findFunctionTokens(List<String> tokens) throws CompilerException
     {
-        List<FunctionDetails> functionDetails = new ArrayList<FunctionDetails>();
+        List<FunctionDetails> functionDetails = new ArrayList<>();
 
         for (int i = 0; i < tokens.size(); i++)
         {
@@ -224,7 +223,7 @@ public class LanguageParser
             String currentToken = tokens.get(i);
 
             //  When we get to a function break, switch where we are putting the tokens
-            if (currentToken.equals(Constants.functionSeperator))
+            if (currentToken.equals(Constants.functionSeparator))
             {
                 if (target == TokenTarget.Parameter)
                 {
@@ -235,7 +234,7 @@ public class LanguageParser
                     target = TokenTarget.SetTokens;
                 }
             }
-            //  If its a normal token, just keep it, but put it in the correct place
+            //  If it's a normal token, just keep it, but put it in the correct place
             else
             {
                 switch (target)
@@ -258,7 +257,7 @@ public class LanguageParser
                         else
                         {
                             throw new CompilerException(
-                                    "Found a constant too far into the paramter list of a function.");
+                                    "Found a constant too far into the parameter list of a function.");
                         }
                     }
                     //  Check if its blank to remove any newline tokens
@@ -269,7 +268,7 @@ public class LanguageParser
                         {
                             functionName = currentToken;
                         }
-                        //  If its not a constant or the function name, its a parameter
+                        //  If it's not a constant or the function name, it's a parameter
                         else
                         {
                             parameterNames.add(currentToken);
@@ -281,15 +280,15 @@ public class LanguageParser
                     break;
                 default:
                     //  The Name case is unhandled here, it should never be encountered in this switch statement
-                    throw new Error("Function finder got into an unaceptable state.");
+                    throw new Error("Function finder got into an unacceptable state.");
                 }
             }
         }
 
         //  The first parameter is actually the return name
-        if (parameterNames.size() >= 1)
+        if (!parameterNames.isEmpty())
         {
-            returnName = parameterNames.remove(0);
+            returnName = parameterNames.removeFirst();
         }
 
         //  Build the actual function details object here
@@ -304,7 +303,7 @@ public class LanguageParser
      * Assigns a unique ID to each function in the list. If the function has an
      * ID of 0, it needs to be assigned and ID, if it is not 0 then it was
      * manually specified by the programmer. The mainline function has not been
-     * added yet, so dosnt need worrying about.
+     * added yet, so doesn't need worrying about.
      */
     private static void assignFunctionIDs(List<FunctionDetails> functionDetails, int startID)
     {
@@ -314,7 +313,7 @@ public class LanguageParser
         for (int i = 0; i < functionDetails.size(); i++)
         {
             FunctionDetails funcDetails = functionDetails.get(i);
-            //  Only assing an ID if it has an ID of 0, which means it hasnt been given an ID yet
+            //  Only assign an ID if it has an ID of 0, which means it hasn't been given an ID yet
             if (funcDetails.getID() == 0)
             {
                 nextID = nextFreeID(functionDetails, nextID);
@@ -361,7 +360,7 @@ public class LanguageParser
     private static ExpressionDetails[] tokensToExpressions(String[] tokens)
     {
         //  The first step is to figure out how to iterate over expressions
-        //  Expressions can be on their own line, but also in brackets (at which case, brackets start the 'line')
+        //  can be on their own line, but also in brackets (at which case, brackets start the 'line')
         //  If we find a function, just skip the whole thing
 
         List<ExpressionDetails> expressions = new ArrayList<>();
@@ -370,13 +369,13 @@ public class LanguageParser
         for (int i = 0; i < tokens.length;)
         {
             //  4 types of tokens we can encounter
-            //  Not an expression, so thats things like functions and their definition
-            //  Start block, which is directly before an expression, but its tricky because it dosnt always mean that its an expression
+            //  Not an expression, so that's things like functions and their definition
+            //  Start block, which is directly before an expression, but its tricky because it doesn't always mean that it's an expression
             //  End block, which ends an expression
             //  normal token, which we want to actually put into the expression
 
-            //  If we find a new line token, we dont care about it, just go the next line
-            if (tokens[i].equals(Constants.lineSeperatorToken))
+            //  If we find a new line token, we don't care about it, just go the next line
+            if (tokens[i].equals(Constants.lineSeparatorToken))
             {
                 i += 1;
             }
@@ -396,11 +395,11 @@ public class LanguageParser
             {
                 i = findNextIndexOfToken(tokens, Constants.functionEnd, i) + 1;
             }
-            //  We found a normal expression, what a suprise
+            //  We found a normal expression, what a surprise
             else
             {
                 //  Find the next new line, that is the end of the current expression
-                int expressionEnd = findNextIndexOfToken(tokens, Constants.lineSeperatorToken, i);
+                int expressionEnd = findNextIndexOfToken(tokens, Constants.lineSeparatorToken, i);
                 expressions.add(expressionFromTokens(tokens, i, expressionEnd));
 
                 i = expressionEnd;
@@ -418,7 +417,7 @@ public class LanguageParser
             }
         }
 
-        //  Cast a list to an array, but its a bit weird because Java
+        //  Cast a list to an array, but it's a bit weird because Java
         return expressions.toArray(new ExpressionDetails[0]);
     }
 
@@ -449,17 +448,17 @@ public class LanguageParser
         boolean result = false;
         int index = findBlockCloseIndex(tokens, startIndex);
 
-        //  First, check that the next token exists. If the next element is outside of the array, it still worked
+        //  First, check that the next token exists. If the next element is outside the array, it still worked
         if (index + 1 >= tokens.length)
         {
             result = true;
         }
-        //  Check the next token. If its a block start, re run this process. If its a newline, end this process. If its somthing else, fail
+        //  Check the next token. If it's a block start, re-run this process. If it's a newline, end this process. If it's something else, fail
         else if (tokens[index + 1].equals(Constants.blockStartStatement))
         {
             result = multiExpressionLineInternal(tokens, index + 1);
         }
-        else if (tokens[index + 1].equals(Constants.lineSeperatorToken))
+        else if (tokens[index + 1].equals(Constants.lineSeparatorToken))
         {
             result = true;
         }
@@ -513,7 +512,7 @@ public class LanguageParser
             }
         }
 
-        //  If we didnt find the center of the expression (no '=' sign), then move all the tokens from the LHS to the RHS
+        //  If we didn't find the center of the expression (no '=' sign), then move all the tokens from the LHS to the RHS
         if (!encounteredCenter)
         {
             rightSideTokens = leftSideTokens;
@@ -557,12 +556,12 @@ public class LanguageParser
     /*
      * Optimise statements to reduce the number needed to run at execution time.
      * Very basic optimisation method, simply checks if the value of a statement
-     * is unchanging, and if it is, pre calculate it.
+     * is unchanging, and if it is, pre-calculate it.
      */
     private static StatementBase optimiseStatements(StatementBase statement)
     {
-        //  If this statment is stable, calculate a value and replace this with a constant
-        //  If this is not stable, recursivly call this method on its children
+        //  If this statement is stable, calculate a value and replace this with a constant
+        //  If this is not stable, recursively call this method on its children
 
         Debugger.logMessage("Optimising", "Optimising the statement " + statement);
 
@@ -570,12 +569,12 @@ public class LanguageParser
 
         if (statement instanceof StatementConstant)
         {
-            //  Do nothing, theres no point optimisng a constant, its already optimal
+            //  Do nothing, there's no point optimising a constant, its already optimal
         }
         //  If this statement is stable, calculate it now
         else if (statement.isStable())
         {
-            //  This shouldnt fail, if it does I have a problem
+            //  This shouldn't fail, if it does I have a problem
             try
             {
                 //  I should be fine passing null, null. Those values are only used by unstable statements
@@ -636,7 +635,7 @@ public class LanguageParser
             TreeStatementElement element = elements.get(j);
             element.indexInExpressionTokens = j;
 
-            //  If its a block start, put it on the operators
+            //  If it's a block start, put it on the operators
             if (element.token.equals(Constants.blockStartStatement))
             {
                 operatorsStack.add(element);
@@ -646,7 +645,7 @@ public class LanguageParser
             {
                 j = findNextIndexOfToken(tokens, Constants.functionEnd, j);
             }
-            //  If its a block end, take all the operators off the operator stack until we find a closing bracket, then remove it
+            //  If it's a block end, take all the operators off the operator stack until we find a closing bracket, then remove it
             else if (element.token.equals(Constants.blockEndStatement))
             {
                 for (int i = operatorsStack.size() - 1; i >= 0
@@ -656,9 +655,9 @@ public class LanguageParser
                 }
 
                 //  Delete the block start
-                if (operatorsStack.get(operatorsStack.size() - 1).token.equals(Constants.blockStartStatement))
+                if (operatorsStack.getLast().token.equals(Constants.blockStartStatement))
                 {
-                    operatorsStack.remove(operatorsStack.size() - 1);
+                    operatorsStack.removeLast();
                 }
                 else
                 {
@@ -669,17 +668,17 @@ public class LanguageParser
             else if (element.operatorStack())
             {
                 //  If a dual operator has an assumed 0 on the left, handle that case. 
-                //  If we dont do this the value on the right becomes the first value
-                if (element.parameterCount == 2 && postfixExpression.size() == 0)
+                //  If we don't do this the value on the right becomes the first value
+                if (element.parameterCount == 2 && postfixExpression.isEmpty())
                 {
                     postfixExpression.add(TreeStatementElement.getZeroElement());
                 }
 
                 //  While the last element in the operator stack has a lower priority, move it to the postfix expression
-                while (operatorsStack.size() > 0
-                        && operatorsStack.get(operatorsStack.size() - 1).isLowerPriorityThan(element))
+                while (!operatorsStack.isEmpty()
+                        && operatorsStack.getLast().isLowerPriorityThan(element))
                 {
-                    TreeStatementElement operator = operatorsStack.remove(operatorsStack.size() - 1);
+                    TreeStatementElement operator = operatorsStack.removeLast();
                     moveOperatorToPostfix(operator, postfixExpression);
                 }
 
@@ -693,11 +692,11 @@ public class LanguageParser
                 if (lastNumberAddition == j - 1)
                 {
                     //  While we have operators to deal with, move them to the expression until we find a function
-                    while (operatorsStack.size() > 0
-                            && operatorsStack.get(operatorsStack.size() - 1).parameterCount <= 2)
+                    while (!operatorsStack.isEmpty()
+                            && operatorsStack.getLast().parameterCount <= 2)
                     {
                         //  Take the last element off of the operatorsStack, and move it to the postfix expression
-                        moveOperatorToPostfix(operatorsStack.remove(operatorsStack.size() - 1), postfixExpression);
+                        moveOperatorToPostfix(operatorsStack.removeLast(), postfixExpression);
                     }
                 }
 
@@ -722,18 +721,16 @@ public class LanguageParser
         }
 
         //  (or something that works out to be no expression)
-        else if (postfixExpression.size() == 0)
+        else if (postfixExpression.isEmpty())
         {
-            //Debugger.logMessage("Postfix size 0",
-            //        "Postfix expression has a size of 0, it probably shouldnt be like this. There are some cases where it shold be though");
             postfixExpression.add(TreeStatementElement.getZeroElement());
         }
         else if (flags.isCompileTimeChecking())
         {
-            checkParesedExpression(postfixExpression.get(0), elements);
+            checkParsedExpression(postfixExpression.getFirst(), elements);
         }
 
-        return executionTreeToStatements(postfixExpression.get(0), functions);
+        return executionTreeToStatements(postfixExpression.getFirst(), functions);
     }
 
     /*
@@ -745,21 +742,21 @@ public class LanguageParser
     {
         if (operator.type == TreeStatementElementType.Intermediate)
         {
-            throw new CompilerException("Got given an intermediate statement to put in postfix, this shouldnt happen");
+            throw new CompilerException("Got given an intermediate statement to put in postfix, this shouldn't happen");
         }
 
         //  If we only want a single parameter, and the latest postfix came before this operator, add an empty element to the operator
-        if (operator.parameterCount == 1 && postfix.size() > 0
-                && postfix.get(postfix.size() - 1).indexInExpressionTokens < operator.indexInExpressionTokens)
+        if (operator.parameterCount == 1 && !postfix.isEmpty()
+                && postfix.getLast().indexInExpressionTokens < operator.indexInExpressionTokens)
         {
             operator.add(TreeStatementElement.getZeroElement());
         }
         else
         {
             //  Remove elements until we have enough or have run out
-            for (int i = 0; i < operator.parameterCount && postfix.size() >= 1; i++)
+            for (int i = 0; i < operator.parameterCount && !postfix.isEmpty(); i++)
             {
-                operator.children.add(0, postfix.remove(postfix.size() - 1));
+                operator.children.addFirst(postfix.removeLast());
             }
         }
 
@@ -774,13 +771,13 @@ public class LanguageParser
 
     /*
      * Recursive method to check that the tokens an operator or function has
-     * came from the correct place. Eg. Functions and solo operators only have
-     * children from the right. If it takes two children, its a bit more
+     * came from the correct place. E.g. Functions and solo operators only have
+     * children from the right. If it takes two children, it's a bit more
      * complicated because the first child can come from either side. The and
      * operator wants a child either side, but some dual functions may want both
      * on the right
      */
-    private static void checkParesedExpression(TreeStatementElement element, List<TreeStatementElement> elements)
+    private static void checkParsedExpression(TreeStatementElement element, List<TreeStatementElement> elements)
             throws Exception
     {
         //  If we are looking at the first parameter of a dual operation, which must be on the left side of the operator
@@ -815,10 +812,10 @@ public class LanguageParser
                 }
             }
 
-            //  Only recursivly check the operators, other values dont have children
+            //  Only recursively check the operators, other values don't have children
             if (child.parameterCount != 0)
             {
-                checkParesedExpression(child, elements);
+                checkParsedExpression(child, elements);
             }
 
             //  We are no longer looking at the first parameter, so turn it off
@@ -872,9 +869,9 @@ public class LanguageParser
             //  then that block has the parameters to this function, so open the block
             if (element.children.size() == 1)
             {
-                if (element.children.get(0).type == TreeStatementElementType.Intermediate)
+                if (element.children.getFirst().type == TreeStatementElementType.Intermediate)
                 {
-                    parametersParent = element.children.get(0);
+                    parametersParent = element.children.getFirst();
                 }
             }
 
@@ -898,16 +895,16 @@ public class LanguageParser
             //  Keep a record of how many times this function is used
             func.referenceCount += 1;
 
-            //  Then build the fuction statement from that information
+            //  Then build the function statement from that information
             result = new StatementFunction(func, statementBases);
             break;
         case Intermediate:
             //  If an element has an Intermediate type, then ignore it and get its child
-            result = executionTreeToStatements(element.children.get(0), functions);
+            result = executionTreeToStatements(element.children.getFirst(), functions);
             break;
         case SoloBuiltin:
             result = new StatementSoloBuiltin(element.token,
-                    executionTreeToStatements(element.children.get(0), functions));
+                    executionTreeToStatements(element.children.getFirst(), functions));
             break;
         case Variable:
             result = new StatementVariable(element.token);
@@ -915,7 +912,7 @@ public class LanguageParser
         case NullType:
             result = new StatementNull();
             break;
-        case Unkown:
+        case Unknown:
             throw new Error("Encountered an element with an unknown type " + element.token);
         default:
             throw new Error(
@@ -953,12 +950,12 @@ public class LanguageParser
         //  Loop until we reach the end of the array or have found the closing block
         for (int i = startIndex; i < tokens.length && closeIndex == -1; i++)
         {
-            //  If its a block start increase depth
+            //  If it's a block start increase depth
             if (tokens[i].equals(Constants.blockStartStatement))
             {
                 bracketDepth += 1;
             }
-            //  If its a block close decrease depth
+            //  If it's a block close decrease depth
             else if (tokens[i].equals(Constants.blockEndStatement))
             {
                 bracketDepth -= 1;
@@ -994,8 +991,8 @@ public class LanguageParser
     }
 
     /*
-     * This method checks the function parameters of all functions for overlaps
-     * with other functions, or reserved tokens. It is able to be disabled via
+     * This method checks the function parameters and names of all functions for overlaps
+     * with other functions, or reserved tokens. It's able to be disabled via
      * the Flag manager.
      */
     private static void checkFunctionParameters(Function[] functions) throws CompilerException
@@ -1012,12 +1009,12 @@ public class LanguageParser
                     if (functions[i].symbol.equals(functions[j].symbol) && !functions[i].symbol.isBlank())
                     {
                         throw new CompilerException(
-                                "Found two seperate functions with the same name, big problem, fix that");
+                                "Found two separate functions with the same name, big problem, fix that");
                     }
                     else if (functions[i].functionID == functions[j].functionID)
                     {
                         throw new CompilerException(
-                                "Found two seperate functions with the same ID assigned, they were '"
+                                "Found two separate functions with the same ID assigned, they were '"
                                         + functions[i].symbol + "' and '" + functions[j].symbol + "' and an ID of "
                                         + functions[i].functionID);
                     }
@@ -1057,6 +1054,7 @@ public class LanguageParser
                 //  Check that there are not duplicated parameter names
                 for (String parameterSecond : functions[i].parameterNames)
                 {
+                    // Ensure we are working with different strings before checking their contents are identical
                     if (parameter != parameterSecond && parameter.equals(parameterSecond))
                     {
                         throw new CompilerException("The parameter '" + parameter + "' from function '"
@@ -1076,11 +1074,11 @@ public class LanguageParser
         //  Check that all tokens that go in pairs, have a pair somewhere
         if (!equalCountOfTokens(tokens, Constants.blockStartStatement, Constants.blockEndStatement))
         {
-            throw new CompilerException("Unmatching number of block tokens in file to parse");
+            throw new CompilerException("Unmatched number of block tokens in file to parse");
         }
         if (!equalCountOfTokens(tokens, Constants.functionStart, Constants.functionEnd))
         {
-            throw new CompilerException("Unmatching number of function start/stop tokens");
+            throw new CompilerException("Unmatched number of function start/stop tokens");
         }
         if (countTokens(tokens, Constants.commentBlockStatement) % 2 != 0)
         {

@@ -11,22 +11,20 @@ import org.example.Compilation.LanguageParser;
 import org.example.Language.StatementProgram;
 import org.example.Support.Support;
 
-import javax.annotation.processing.SupportedSourceVersion;
-
 //  This script is messy, but it mostly works. I cant be bothered working on it more, testing the test script is hard
 /*
  * This class is responsible for running all the automatic tests.
  * These are tests I have written in Digital Logic.
- * This class compiles them, and optionally runs them aswell, depending on the test.
+ * This class compiles them, and optionally runs them as well, depending on the test.
  */
 class CompilationTests
 {
-    private List<Thread> threads = new ArrayList<>();
+    private final List<Thread> threads = new ArrayList<>();
     private static int testCount = 0;
 
     /*
-     * Runs all of the test scripts, and executes them aswell if it specifies a
-     * return value. Wraps the function that starts all of the actual tests.
+     * Runs all the test scripts, and executes them as well if it specifies a
+     * return value. Wraps the function that starts all the actual tests.
      */
     public static int runCompilerTests()
     {
@@ -45,11 +43,11 @@ class CompilationTests
                     thread.join();
                 }
             } catch (InterruptedException e) {
-                TestsRunnerMain.logFailure("Failed while waiting for all the threads to finish\n" + e.toString());
+                TestsRunnerMain.logFailure("Failed while waiting for all the threads to finish\n" + e);
             }
         } catch (URISyntaxException e){
-            System.out.println(e.toString());
-            TestsRunnerMain.logFailure("An exception occurred while fetching the tests to run\n" + e.toString());
+            System.out.println(e);
+            TestsRunnerMain.logFailure("An exception occurred while fetching the tests to run\n" + e);
         }
 
         return testCount;
@@ -76,7 +74,7 @@ class CompilationTests
                     testCount += 1;
 
                     //  Create a new thread, then run it
-                    Thread newThread = new Thread(runner.new SingleTestRun(child), child.getName());
+                    Thread newThread = new Thread(new SingleTestRun(child), child.getName());
                     newThread.start();
                     runner.threads.add(newThread);
                 }
@@ -88,9 +86,9 @@ class CompilationTests
      * This is a simple class which is used by the threading system to run a
      * test.
      */
-    public class SingleTestRun implements Runnable
+    public static class SingleTestRun implements Runnable
     {
-        private File child;
+        private final File child;
 
         //  Constructor
         public SingleTestRun(File child)
@@ -165,7 +163,7 @@ class CompilationTests
     private static int expectedValueToInt(String expected)
     {
         int result;
-        //  If its all true values, and the file being tested used the lazy syntax
+        //  If it's all true values, and the file being tested used the lazy syntax
         if (expected.equals("true"))
         {
             //  Bitwise not
@@ -186,7 +184,7 @@ class CompilationTests
 
     /*
      * Find the target value in a test file, if it exists. If a test is only
-     * supposed to be compiled, it wont specify a target value.
+     * supposed to be compiled, it won't specify a target value.
      */
     private static String findTargetValue(File child)
     {
@@ -230,7 +228,7 @@ class CompilationTests
     private static StatementProgram compileToProgram(String fileName)
     {
         //  Load the script (Compile)
-        StatementProgram loadedProgram = null;
+        StatementProgram loadedProgram;
         try
         {
             loadedProgram = LanguageParser.parseFile(fileName);
@@ -250,14 +248,13 @@ class CompilationTests
      * that was expected.
      */
     private static void checkReturnedValue(String fileName, String targetValue, StatementProgram loadedProgram)
-            throws Exception
     {
         //  Execute the script if it loaded and specifies a return value
         if (!targetValue.isEmpty() && loadedProgram != null)
         {
             Integer result = null;
             boolean success = false;
-            //  Actually try running the program, wrap it in a catch incase it fails
+            //  Actually try running the program, wrap it in a catch in case it fails
             try
             {
                 result = loadedProgram.getValueObject();
@@ -270,7 +267,7 @@ class CompilationTests
             }
             int expected = expectedValueToInt(targetValue);
 
-            //  Check that we got a value, fail if we didnt. We only run the program if a value is expected
+            //  Check that we got a value, fail if we didn't. We only run the program if a value is expected
             if (success)
             {
                 if (result == null)

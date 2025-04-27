@@ -7,7 +7,7 @@ import org.example.Support.Support;
  */
 public class StatementVariable extends StatementBase
 {
-    private String variableName;
+    private final String variableName;
 
     //  Constructor
     public StatementVariable(String variableName)

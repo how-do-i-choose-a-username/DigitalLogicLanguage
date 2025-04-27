@@ -61,7 +61,7 @@ public class StatementSoloBuiltin extends StatementBuiltinBase
             first.setValue(~input, program, function);
             break;
         case Constants.terminalStatement:
-            //  If we can print the input as a char, do so. Use the provided statement as a check for if we shouldnt do this
+            //  If we can print the input as a char, do so. Use the provided statement as a check for if we shouldn't do this
             if ((firstInt & 2) == 0)
             {
                 //  If the third bit is false, print as a character

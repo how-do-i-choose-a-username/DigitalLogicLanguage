@@ -8,9 +8,9 @@ import java.io.Serializable;
  */
 public class Function implements Serializable
 {
-    public String symbol;
-    public String[] parameterNames;
-    public String returnName;
+    public final String symbol;
+    public final String[] parameterNames;
+    public final String returnName;
     public Expression[] expressionsGet;
     public Expression[] expressionsSet;
     public int functionID;

@@ -1,7 +1,7 @@
 package org.example.Runtime;
 
 /*
- * This class contains some constants used all throught the language
+ * This class contains some constants used all throughout the language
  */
 public class LanguageConstants
 {

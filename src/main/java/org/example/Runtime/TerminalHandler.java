@@ -1,6 +1,5 @@
 package org.example.Runtime;
 
-import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 

@@ -3,11 +3,11 @@ package org.example.Language;
 import org.example.Support.Support;
 
 /*
- * This statement is to execute a function. It does so by creating a function runnner for that function, and calculating parameters.
+ * This statement is to execute a function. It does so by creating a function runner for that function, and calculating parameters.
  */
 public class StatementFunction extends StatementBase
 {
-    private Function ownedFunction;
+    private final Function ownedFunction;
     private StatementBase[] parameters;
 
     //  Constructor

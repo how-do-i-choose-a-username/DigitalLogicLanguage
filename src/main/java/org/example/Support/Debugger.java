@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class Debugger
 {
-    //  This isnt a great solution, but it works. Its only used to pause compilation
+    //  This isn't a great solution, but it works. It's only used to pause compilation
     static Scanner sc;
     private static boolean debugging = false;
     public static boolean showWarnings = true;

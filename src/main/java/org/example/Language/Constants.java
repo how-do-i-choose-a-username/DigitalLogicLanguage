@@ -23,23 +23,23 @@ public class Constants
 
     //  Language tokens
     public static final String expressionCenter = "=";
-    public static final String lineSeperatorToken = "\n";
+    public static final String lineSeparatorToken = "\n";
     public static final String blockStartStatement = "(";
     public static final String blockEndStatement = ")";
     public static final String commentStatement = "#";
     public static final String commentBlockStatement = "##";
     public static final String functionStart = "<<";
-    public static final String functionSeperator = "//";
+    public static final String functionSeparator = "//";
     public static final String functionEnd = ">>";
     public static final String[] intermediateStatements = new String[]
-    { expressionCenter, lineSeperatorToken, blockStartStatement, blockEndStatement, commentStatement,
-            commentBlockStatement, functionStart, functionSeperator, functionEnd };
+    { expressionCenter, lineSeparatorToken, blockStartStatement, blockEndStatement, commentStatement,
+            commentBlockStatement, functionStart, functionSeparator, functionEnd };
 
     //  Array of every builtin operator
     public static final String[] builtinStatements = new String[]
     { notStatement, andStatement, orStatement, accessBitStatement, fileStatement, terminalStatement,
-            reflectionStatement, expressionCenter, lineSeperatorToken, blockStartStatement, blockEndStatement,
-            commentStatement, commentBlockStatement, functionStart, functionSeperator, functionEnd };
+            reflectionStatement, expressionCenter, lineSeparatorToken, blockStartStatement, blockEndStatement,
+            commentStatement, commentBlockStatement, functionStart, functionSeparator, functionEnd };
 
     //  Misc tokens
     public static final String emptyElementToken = "";

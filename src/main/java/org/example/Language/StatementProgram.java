@@ -13,7 +13,7 @@ import org.example.Support.Support;
 public class StatementProgram extends StatementBase
 {
     //  This is an array of all functions, so that they can be called via reflection
-    private Function[] functions;
+    private final Function[] functions;
     //  This is a dictionary of global variables, so they can be accessed via reflection
     private Dictionary<Integer, Integer> globalVariables;
     //  This is the function that is run (the mainline)
@@ -24,7 +24,7 @@ public class StatementProgram extends StatementBase
     {
         mainlineFunction = new StatementFunction(function, parameters);
 
-        //  Initalise the program specific stuff
+        //  Initialise the program specific stuff
         this.functions = functions;
     }
 
@@ -39,7 +39,7 @@ public class StatementProgram extends StatementBase
         int[] calculatedParameters = getVariableArray(variableStart, function.parameterNames.length);
 
         FunctionRunner runner = new FunctionRunner();
-        //  This shouldnt break it, I have a check for null values
+        //  This shouldn't break it, I have a check for null values
         runner.setToFunction(function, calculatedParameters, value, this);
     }
 
@@ -75,7 +75,7 @@ public class StatementProgram extends StatementBase
         }
         if (result == null)
         {
-            String message = "Tried to retreive a function with an invalid ID " + functionID + "\nAvailable IDs are ";
+            String message = "Tried to retrieve a function with an invalid ID " + functionID + "\nAvailable IDs are ";
             for (int i = 0; i < functions.length; i++)
             {
                 message += functions[i].functionID + " ";
@@ -119,7 +119,7 @@ public class StatementProgram extends StatementBase
 
     /*
      * Method used to call this program, returns an Integer object which may be null.
-     * Initalises this statement, then calls the function contained by this program statement.
+     * Initialises this statement, then calls the function contained by this program statement.
      */
     public Integer getValueObject() throws Exception
     {

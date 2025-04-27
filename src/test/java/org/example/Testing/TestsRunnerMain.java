@@ -53,7 +53,7 @@ class TestsRunnerMain
         }
     }
 
-    //  Log a failure to console, and count that it occured
+    //  Log a failure to console, and count that it occurred
     public synchronized static void logFailure(String message)
     {
         failures += 1;

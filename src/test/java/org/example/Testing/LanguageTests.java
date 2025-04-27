@@ -192,12 +192,12 @@ class LanguageTests
 
         if (getExisting.getValue(null, null) != thatOtherConstant.getValue(null, null))
         {
-            TestsRunnerMain.logFailure("Somthing failed when getting or setting a variable");
+            TestsRunnerMain.logFailure("Something failed when getting or setting a variable");
         }
 
         if (result != constant.getValue(null, null))
         {
-            TestsRunnerMain.logFailure("Function failed to return the correct value, this occured when assigning another variable");
+            TestsRunnerMain.logFailure("Function failed to return the correct value, this occurred when assigning another variable");
         }
     }
 
@@ -259,9 +259,9 @@ class LanguageTests
         { new Expression(outerSetReturnVariable, statementFunction) };
 
         Function outerFunction = new Function("Outer", new String[0], outerReturn, outerExpressions, null);
-        StatementBase outerStatementFuction = new StatementFunction(outerFunction, new StatementBase[0]);
+        StatementBase outerStatementFunction = new StatementFunction(outerFunction, new StatementBase[0]);
 
-        if (outerStatementFuction.getValue(null, null) != innerConstant.getValue(null, null))
+        if (outerStatementFunction.getValue(null, null) != innerConstant.getValue(null, null))
         {
             TestsRunnerMain.logFailure("Nested functions failed to return the correct result");
         }

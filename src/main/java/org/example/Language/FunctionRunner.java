@@ -24,8 +24,8 @@ public class FunctionRunner
     public Integer executeFunctionObject(Function function, int[] parameterValues, StatementProgram program)
             throws Exception
     {
-        //  Initalise the dictionary, using the parameters passed into the function
-        variables = new Hashtable<String, Integer>();
+        //  Initialise the dictionary, using the parameters passed into the function
+        variables = new Hashtable<>();
         variablesSetTo = new ArrayList<>();
         for (int i = 0; i < parameterValues.length && i < function.parameterNames.length; i++)
         {
@@ -49,15 +49,15 @@ public class FunctionRunner
     }
 
     /*
-     * Sets a value to the provided function, also initalises parameters. When
+     * Sets a value to the provided function, also initialises parameters. When
      * the function has finished running, any of the parameters which had a
      * value set to them have their current value set to the statement which
      * initially provided a value for that statement.
      */
     public void setToFunction(Function function, int[] parameterValues, int valueBeingSet, StatementProgram program) throws Exception
     {
-        //  Initalise the dictionary, using the parameters passed into the function
-        variables = new Hashtable<String, Integer>();
+        //  Initialise the dictionary, using the parameters passed into the function
+        variables = new Hashtable<>();
         variablesSetTo = new ArrayList<>();
         for (int i = 0; i < parameterValues.length && i < function.parameterNames.length; i++)
         {

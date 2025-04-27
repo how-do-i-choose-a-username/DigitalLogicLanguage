@@ -3,7 +3,7 @@ They should all be logically valid scripts to compile, their purpose is to stres
 The name of each script indicates what it is testing. As I add new compiler features I should add appropriate tests to this folder.
 There are also scripts in this folder which are run after being compiled, sorted by the folder they are in, but also because they start with the line '# Returns<return-value>'
 The return value can be a binary constant, made up of 0s and 1s, or 'true' or 'false' to indicate a bit strings of 1s or 0s respectively.
-A lot of the functionality being tested has a seperate compilation and runtime version, I should probably not do this
+A lot of the functionality being tested has a separate compilation and runtime version, I should probably not do this
 There is also the folder FailureChecks, which contains '.notdl' files, each of which must fail to compile or run to succesfully pass the test
 
 Currently untested functionality:

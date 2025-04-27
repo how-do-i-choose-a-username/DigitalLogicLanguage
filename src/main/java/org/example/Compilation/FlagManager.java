@@ -3,7 +3,7 @@ package org.example.Compilation;
 import org.example.Support.Support;
 
 /*
- * Class to parse the provided command line arguments, and convert them to useable data for the Language runner.
+ * Class to parse the provided command line arguments, and convert them to usable data for the Language runner.
  */
 public class FlagManager
 {
@@ -13,7 +13,7 @@ public class FlagManager
     private CompilerMode whatToDo = CompilerMode.RunFile; //  Controls whether the runtime compiles or runs the code
     private boolean compileTimeChecking = true; //  Run language checks while compiling, slow things down a bit when run
     private boolean optimiseCode = false; //  Runs some basic optimisations in the code during the compilation process
-    private boolean showWarnings = true; //  Whether to show warnings during the compilation process (None thrown as of yet)
+    private boolean showWarnings = true; //  Whether to show warnings during the compilation process (None thrown yet)
     private boolean stripUnusedCode = false; //  Remove any unused functions (in a simple way)
     private boolean printFlagStates = false; //  Print out all the flags
     private boolean enableDebugging = false; //  Enable debug messages during compilation
@@ -76,11 +76,6 @@ public class FlagManager
         return showTimings;
     }
 
-    //  Empty constructor
-    public FlagManager()
-    {
-    }
-
     //  Flag with only the file to load, and default settings
     public FlagManager(String fileToLoad)
     {
@@ -89,7 +84,7 @@ public class FlagManager
 
     /*
      * Primary constructor for this class, is provided with the command line
-     * arguments for the language runner, and converts them to useable data.
+     * arguments for the language runner, and converts them to usable data.
      */
     public FlagManager(String[] args)
     {
@@ -169,18 +164,18 @@ public class FlagManager
             {
                 showTimings = valueOfNext(i + 1, args, showTimings);
             }
-            //  Check if its a flag, and throw an error if it is, because its unrecognised
+            //  Check if it's a flag, and throw an error if it is, because its unrecognised
             else if (isFlagToken(i, args))
             {
                 logFlagManagerError("Encountered the flag '" + args[i] + "' which is unknown.");
             }
-            //  Check if the previous element is not a flag, if its not then this is the file path
+            //  Check if the previous element is not a flag, if it's not then this is the file path
             else if (!isFlagToken(i - 1, args))
             {
                 fileToLoad = args[i];
             }
 
-            //  If we encounter a token thats the wrong length, throw an error
+            //  If we encounter a token that's the wrong length, throw an error
             if (args[i].startsWith(FlagConstants.smallFlagPrefix) && args[i].length() != 2)
             {
                 logFlagManagerError("Invalid flag '" + args[i]
@@ -236,7 +231,7 @@ public class FlagManager
 
         String nextString = valueOfNextString(next, args).toLowerCase();
 
-        if (nextString.length() > 0)
+        if (!nextString.isEmpty())
         {
             result = nextString.charAt(0);
         }

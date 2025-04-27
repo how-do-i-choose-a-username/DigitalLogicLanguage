@@ -34,7 +34,7 @@ class TreeStatementElement
         this.token = token;
 
         //  Default to unknown
-        type = TreeStatementElementType.Unkown;
+        type = TreeStatementElementType.Unknown;
 
         //  Check the easy ones
         if (token.equals(Constants.emptyElementToken))
@@ -61,7 +61,7 @@ class TreeStatementElement
         }
 
         //  Check if this is a function
-        //  There are times when I pass a null value to functionDetails because I know that it isnt a function
+        //  There are times when I pass a null value to functionDetails because I know that it isn't a function
         if (functionDetails != null)
         {
             //  Loop until we have searched all the functions, or we know this is a function
@@ -69,14 +69,14 @@ class TreeStatementElement
             {
                 if (functionDetails[i].getFunctionName().equals(token))
                 {
-                    parameterCount = functionDetails[i].getParamterNames().length;
+                    parameterCount = functionDetails[i].getParameterNames().length;
                     type = TreeStatementElementType.Function;
                 }
             }
         }
 
-        //  If its still unknown, check if its a variable (which is if its none of the builtin tokens)
-        if (type == TreeStatementElementType.Unkown)
+        //  If it's still unknown, check if it's a variable (which is if its none of the builtin tokens)
+        if (type == TreeStatementElementType.Unknown)
         {
             boolean foundMatchingBuiltin = false;
 
@@ -111,7 +111,7 @@ class TreeStatementElement
      */
     public boolean isLowerPriorityThan(TreeStatementElement otherElement)
     {
-        boolean result = false;
+        boolean result;
 
         //  Brackets are always top priority
         if (type == TreeStatementElementType.Intermediate)
@@ -123,7 +123,7 @@ class TreeStatementElement
         {
             result = false;
         }
-        //  Finally, check it the old fashioned way
+        //  Finally, check it the old-fashioned way
         else
         {
             result = getPriority() > otherElement.getPriority();
@@ -139,7 +139,7 @@ class TreeStatementElement
     {
         int result = 0;
 
-        //  If it only has one parameter its the highest priority
+        //  If it only has one parameter it's the highest priority
         if (parameterCount == 1)
         {
             result = 3;

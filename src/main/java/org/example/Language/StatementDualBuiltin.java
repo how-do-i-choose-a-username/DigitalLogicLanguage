@@ -72,7 +72,7 @@ public class StatementDualBuiltin extends StatementBuiltinBase
 
         switch (operation)
         {
-        //  If either of its values are the requested one, its fine, otherwise set the first one to be the input value
+        //  If either of its values are the requested one, it's fine, otherwise set the first one to be the input value
         case Constants.orStatement:
             if (firstInt != input && secondInt != input)
             {
@@ -113,7 +113,7 @@ public class StatementDualBuiltin extends StatementBuiltinBase
     }
 
     /*
-     * Method when getting a value from the bits operator, its a tad
+     * Method when getting a value from the bits operator, it's a tad
      * complicated. Create a new int Loop over control bits, when a true bit is
      * found, put the corresponding value from the working value into the next
      * free spot on the newly created int Return the newly created int
