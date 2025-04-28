@@ -1,0 +1,16 @@
+# Expected output: Nothing if the user enters 'A' (case is important), 'ABC' for any other key press
+
+# Read a character from the user into a variable
+input = _
+
+# If the user enters an 'A', then the conditional code is not run because the or '|' function is satisfied
+# If the user enters anything else neither side of the or function has the value being set
+# This means the or function will set that value to the function 'Function'
+Function | input = 01000001  # 01000001 -> Ascii for 'A'
+
+# Note that code is only declared for the setter block, not the getter
+<< Function return // //
+    _ = return      # Value passed to the function ('A')
+    _ = 01000010    # Ascii for B
+    _ = 01000011    # Ascii for C
+>>

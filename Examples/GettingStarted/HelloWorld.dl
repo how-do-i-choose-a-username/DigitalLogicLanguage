@@ -1,0 +1,15 @@
+# Expected output: 'Hello World!' is printed to the terminal
+
+# Write each character to the terminal in sequence (Ascii codes are used)
+_ = 01001000    # H
+_ = 01100101    # e
+_ = 01101100    # l
+_ = 01101100    # l
+_ = 01101111    # o
+_ = 00100000    # space
+_ = 01010111    # W
+_ = 01101111    # o
+_ = 01110010    # r
+_ = 01101100    # l
+_ = 01100100    # d
+_ = 00100001    # !

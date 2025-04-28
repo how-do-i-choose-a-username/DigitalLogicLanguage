@@ -1,0 +1,10 @@
+# Expected output: Terminal echoes whatever you type (Ctrl + D to terminate). By default Digital Logic does not echo characters to the terminal
+
+# Function to read a character from the terminal, output it, then recursively call itself
+<< ECHO return // 
+    _ = _
+    none = ECHO
+// >>
+
+# Digital logic has no looping structure, so recursion is used instead
+none = ECHO

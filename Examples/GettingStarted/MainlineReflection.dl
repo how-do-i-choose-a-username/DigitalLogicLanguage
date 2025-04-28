@@ -1,0 +1,10 @@
+# Expected output: Terminal echoes whatever you type (Ctrl + D to terminate). By default Digital Logic does not echo characters to the terminal
+
+# The following 9 characters are awesome!
+# This is an example of using reflection to recursively call the mainline
+# The first line reads a character from the user, then outputs it again
+# The second line calls the function with ID 0, which is the mainline
+# This file works the same as Echo.dl
+
+_ = _
+1 ?
