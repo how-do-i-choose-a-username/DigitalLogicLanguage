@@ -1,9 +1,8 @@
 This document outlines the tools used in this project. Internally, there is a test script but this is not available to use in the built jar. The available entry point is the language runtime script.
 LanguageRuntime is to run the programs that are written in Digital Logic. It has a variety of command line options it can be configured with. 
 All flags start with the '-' character, then have a single character specifying which flag it is. Any value that goes with the flag must be seperated by a space. The filepath argument can set with or without its corresponding flag.
-The command to run the built jar file is 'java -jar DigitalLogic.jar', this program was developed on Java version 17.0.2. Both macOS and Windows are supported.
+The command to run the built jar file is 'java -jar DigitalLogic.jar', this program was developed on Java version 21.0.7. Windows is supported. macOS should work.
 Due to the recursive nature of Digital Logic, you may need to modify the Java stack size. '-Xss4M' is the flag to do that, inserted before the java file being run. The M indicates megabytes, this can be gigabytes. The 4 is how many megabytes to allocate.
-Please note, when running the provided .jar file it will automatically create a file called 'terminal.dll' on windows and 'libterminal.dylib' on macOS. This is a native library file and is required to run Digital Logic code.
 
 List of flags:
 -f Specifies that the next value is the file to load, must be followed by a file path.
