@@ -1,0 +1,247 @@
+# This is an unfinished demo script
+# It prints out a grid with a 'player' that can be moved around.
+# Use WASD keys to move the player
+
+# Global constant functions, and other constants
+<< Flag value // value = ? 10 // ? 10 = value >>
+<< ConditionalValue value // value = ? 11 // ? 11 = value >>
+<< AdditionAInternal return // return = ? 100 // ? 100 = return >>
+<< AdditionBInternal return // return = ? 101 // ? 101 = return >>
+<< EqualsValueInternal return // return = ? 110 // ? 110 = return >>
+<< GridLoopInternal return // return = ? 111 // ? 111 = return >>
+<< GridLoopFunctionIDInternal return // return = ? 1000 // ? 1000 = return >>
+<< GridLoopParameterIDInternal return // return = ? 1001 // ? 1001 = return >>
+<< GridLoopRowCountInternal return // return = ? 1010 // ? 1010 = return >>
+<< GridLoopRowWidthInternal return // return = ? 1011 // ? 1011 = return >>
+<< GridLoopPreRowFunctionIDInternal return // return = ? 1100 // ? 1100 = return >>
+<< GridLoopPostRowFunctionIDInternal return // return = ? 1101 // ? 1101 = return >>
+<< GridLoopXPosition return // return = ? 1110 // ? 1110 = return >>
+<< GridLoopYPosition return // return = ? 1111 // ? 1111 = return >>
+<< PlayerXPosition return // return = ? 10000 // ? 10000 = return >>
+<< PlayerYPosition return // return = ? 10001 // ? 10001 = return >>
+
+# Base offset as to where the grid data is stored in the global variables. The 15th bit is true
+<< BaseGridOffsetInternal return // return = 1000000000000000 >>
+
+# Null function, used when I have to provide a reference, but dont want it to actually do anything
+<< NULL 1 >>
+
+# XOR function
+<< ^ return param1 param2 // 
+    and = param1 & param2
+    or = param1 | param2
+    return = or & ! and
+>>
+
+# Left shift function
+<< <- return param1 // ! 1 : return = param1 >>
+
+# Addition function
+<< + return a b // 
+    AdditionAInternal = a
+    AdditionBInternal = b
+
+    # If B is not 0, call an internal addition function
+    addInternal | AdditionBInternal = 0
+
+    return = AdditionAInternal
+>>
+
+# Addition internal
+<< addInternal return // return = 1 //
+    # Fancy addition algorithm
+    carry = AdditionAInternal & AdditionBInternal
+    AdditionAInternal = AdditionAInternal ^ AdditionBInternal
+    AdditionBInternal = <- carry
+
+    # If B is not 0 yet, recall this function
+    addInternal | AdditionBInternal = 0
+>>
+
+# When this function is set to, set the flag to false. When its retrieved from set it to true instead
+# Used when running conditional code, resets whenever it is retrieved from
+<< If // Flag = ! // Flag = 0 >>
+
+# Wrapper for the if statement functions, to simplify the if statement
+<< isTrueWrapper return functionID // return = 1 // ConditionalValue = 1 ? functionID >>
+<< isFalseWrapper return functionID // return = ! // ConditionalValue = 1 ? functionID >>
+
+# If inValue equals checkValue then run the function at trueFunctionID otherwise run falseFunctionID
+<< ifFunction return inValue checkValue trueFunctionID falseFunctionID //
+    # Set the flag (via If) depending on if 'inValue' equals 'checkValue'
+    ( If & ( isFalseWrapper falseFunctionID ) ) | inValue = checkValue
+
+    # If the flag is not set, then call the function
+    ( isTrueWrapper trueFunctionID ) | Flag = 0
+
+    return = ConditionalValue
+>>
+
+# Public facing loop function
+<< Loop return functionID parameterID count //
+    # Call the internal loop if count is not 0
+    ( LoopInternal functionID parameterID count ) | count = 0
+>>
+
+# Internal part of the loop, which does the actual looping bit
+<< LoopInternal return functionID parameterID count //
+    return = 1
+//
+    # Call the getter of the function
+    parameterID ? functionID
+    # Add negative one to the count
+    remainingCount = count + ! 0
+    # If count is not 0, call the function again
+    ( LoopInternal functionID parameterID remainingCount ) | remainingCount = 0
+>>  
+
+# Prints a grid border (asterisk and space)
+<< PrintBorderChar 10 // 
+    _ = 00101010 
+    _ = 00100000
+>>
+
+# Prints border, then a new line
+<< PrintEndOfLine 11 // 
+    PrintBorderChar
+    PrintNewLine
+>>
+
+# Prints a horizontal line, ie. the border
+<< PrintHorizontalBorder 100 // 
+    PrintBorderChar
+    Loop 10 1 GridLoopRowWidthInternal 
+    PrintEndOfLine
+>>
+
+# Loop over a grid, with row count and row width
+# Also, theres a bunch of functions to call at the appropriate times, none of them can have parameters though
+<< GridLoop return functionID parameterID rowCount rowWidth preGridFunctionID postGridFunctionID preRowFunctionID postRowFunctionID //
+    
+    # Initialise the grid loop counters
+    GridLoopInternal = 0
+    GridLoopXPosition = 0
+    GridLoopYPosition = 0
+
+    # Set all the global variables/parameters that the following functions require
+    GridLoopFunctionIDInternal = functionID
+    GridLoopParameterIDInternal = parameterID
+    GridLoopRowCountInternal = rowCount
+    GridLoopRowWidthInternal = rowWidth
+    GridLoopPreRowFunctionIDInternal = preRowFunctionID
+    GridLoopPostRowFunctionIDInternal = postRowFunctionID
+
+    # Call function before looping over grid
+    1 ? preGridFunctionID
+    
+    # Loop over GridLoopRow (111) starting at param 1000 rowCount times
+    Loop 111 1000 rowCount
+
+    # Call function after looping over grid
+    1 ? postGridFunctionID
+>>
+
+# Loop over a row of the grid. It takes rowCount so that it gets rowWidth when reflection is used
+<< GridLoopRow 111 return functionID parameterID rowCount rowWidth preRowFunctionID postRowFunctionID // 
+
+    # Call the pre row function
+    1 ? preRowFunctionID
+
+    # Loop over GridLoopSquare (100) starting at params 1000 rowWidth times
+    Loop 1000 1000 rowWidth
+
+    # Call the post row function
+    1 ? postRowFunctionID
+
+    # Update counters, we start this function with X as 0, so it works
+    GridLoopXPosition = 0
+    GridLoopYPosition = GridLoopYPosition + 1
+>>
+
+# Call the function for a single square of the grid
+<< GridLoopSquare 1000 return functionID parameterID void //
+    # Call the appropriate function
+    parameterID ? functionID
+
+    # Update counters
+    GridLoopInternal = GridLoopInternal + 1
+    GridLoopXPosition = GridLoopXPosition + 1
+>>
+
+# Used within the GridLoop
+<< InitialiseGridSquareFunction 1001 //
+    # Initialise the appropriate location to a period character
+    ? ( GridLoopInternal + BaseGridOffsetInternal ) = 00101110
+>>
+
+# Used to print out the grid
+<< PrintGridSquare 1011 // 
+    isOnPlayerPosition = ( PlayerXPosition == GridLoopXPosition ) & ( PlayerYPosition == GridLoopYPosition ) & 100000
+    ## Debug operator
+    __ isOnPlayerPosition
+    __ PlayerXPosition
+    __ PlayerYPosition
+    __ GridLoopXPosition
+    __ GridLoopYPosition ##
+    ifFunction isOnPlayerPosition 100000 1110 1111
+    _ = 00100000
+>>
+
+# Used when I need a function to return a value
+<< True 1100 return // return = ! 0 >>
+<< False 1101 return // return = 0 >>
+
+<< PrintPlayer 1110 // _ = 01010000 >>
+<< PrintFromGridData 1111 return // _ = ? ( GridLoopInternal + BaseGridOffsetInternal ) >>
+
+# Check if two values are equal. Its also not perfectly safe, two true values will break it
+# This operator is terrible, and not to be used
+<< == return LHS RHS // 
+    EqualsValueInternal = ! 0
+    # Set the valueInternal to false if LHS != RHS, otherwise it stays true
+    EqualsInternal | 0 = LHS ^ RHS
+    return = EqualsValueInternal
+>>
+
+<< EqualsInternal // return = ! 0 //
+    EqualsValueInternal = 0
+>>
+
+# These are both set to ten
+width = 1010
+height = 1010
+
+# These are both set to two
+PlayerXPosition = 10
+PlayerYPosition = 10
+
+# InitialiseGridSquareFunction via GridLoop. Pass the NULL function as the remaining parameters
+GridLoop 1001 1 height width 1 1 1 1
+
+GameLoop height width
+
+<< MoveUp 10000 // PlayerYPosition = PlayerYPosition + ! 0 >>
+<< MoveDown 10001 // PlayerYPosition = PlayerYPosition + 1 >>
+<< MoveLeft 10010 // PlayerXPosition = PlayerXPosition + ! 0 >>
+<< MoveRight 10011 // PlayerXPosition = PlayerXPosition + 1 >>
+
+<< PrintNewLine 10100 // _ = 00001010 >>
+
+<< GameLoop return height width void // 
+    # Clear the screen
+    Loop 10100 1 10100
+
+    # PrintGridSquare, pass the horizontal border as code to run before and after the grid loop
+    # Before a line it prints a border char, after a line it prints a border char and new line
+    GridLoop 1011 1 height width 100 100 10 11
+
+    input = _
+
+    ifFunction input 01110111 10000 1   # Move up
+    ifFunction input 01110011 10001 1   # Move down
+    ifFunction input 01100001 10010 1   # Move left
+    ifFunction input 01100100 10011 1   # Move right
+
+    # If not a newline, recall the game loop
+    ( GameLoop height width ) | input = 00001010 
+// >>

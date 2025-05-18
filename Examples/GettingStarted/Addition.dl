@@ -14,7 +14,7 @@ num2 = 11100    # 28
 >>
 
 # Left shift function (note the use of the bits operator)
-<< <- return param1 // ! 1 : return = ! 0 : param1 >>
+<< <- return param1 // ! 1 : return = param1 >>
 
 # Addition function (recursive)
 << + return a b // 

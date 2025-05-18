@@ -1,0 +1,411 @@
+# This is a framework of basic math and other operations. It also calculates primes as a proof of concept
+# It starts with some basic functions, then builds it up from there until it performs complicated algorithms (like division)
+
+# This function is effectively a global variable, avoid when reasonably possible
+<< AdditionOverflow return // return = ? 10000 // ? 10000 = return >>
+
+# The offset in memory where the values for the Sieve of Eratosthenes are stored
+# The memory being used has an undetermined length
+<< Offset return // return = 100000 >>
+
+# Some basic functions to return constants. These can be used in other functions (unlike any variables declared)
+<< NULL 1 >>
+<< True 10 return // return = ! >>
+<< False 11 return // return = 0 >>
+<< MostSignificantBit return // return = 10000000000000000000000000000000 >>
+
+# --- Generic math functions ---
+# XOR function
+<< ^ return param1 param2 // 
+    and = param1 & param2
+    or = param1 | param2
+    return = or & ! and
+>>
+
+# Left and Right bit shifts (single)
+<< <- return param1 // ! 1 : return = param1 >>
+<< -> return param1 // return = ! 1 : param1 >>
+
+# Shift left multiple
+<< <<- return toShift times //  
+    # Clamp the number of times to a max of 32
+    ( shiftInternal toShift True ) | 0 = times <=| 100000
+    return = toShift
+>> 
+
+# Shift right multiple
+<< ->> return toShift times //  
+    # Clamp the number of times to a max of 32
+    ( shiftInternal toShift False ) | 0 = times <=| 100000
+    return = toShift
+>> 
+
+# Generic internal shift function. leftShift is either true or false
+<< shiftInternal times value leftShift void // //
+    # Shift the value, either direction based on the leftShift value
+    value = ( <- value & leftShift ) | ( -> value & ! leftShift )
+    # Update counter, then recall this function, passing the times as the value being set
+    times = times - 1
+    ( shiftInternal value leftShift ) | 0 = times
+>>
+
+# Length. Ie, the position of the most significant bit in the given string
+<< <-> return input // 
+    # If input is not 0, then call the internal function, write to the return value
+    lengthInternal return | 0 = input
+>>
+
+# Length internal
+<< lengthInternal input length // //
+    # Reduce the input length and increment the length counter
+    input = -> input
+    length = length + 1
+
+    # While the input value is not 0 continue to count up
+    lengthInternal length | 0 = input
+>>
+
+# Addition function
+<< + return a b // 
+    AdditionOverflow = False
+
+    # If b is not 0, call an internal addition function
+    ( a addInternal b ) | b = 0
+
+    # Result from setting to the internal function is stored in 'a'
+    return = a
+//
+    # Setting block for Addition function
+    sum = a + b
+    # Write the result back to a, because I still need the result out
+    a = sum
+>>
+
+# Addition internal
+<< addInternal return a b // return = 1 //
+    # Fancy addition algorithm
+    carry = a & b
+    a = a ^ b
+
+    # Set AdditionOverflow to true if the addition overflowed
+    AdditionOverflow = AdditionOverflow | ( MostSignificantBit == MostSignificantBit & carry )
+
+    b = <- carry
+
+    # If B is not 0 yet, recall this function
+    ( a addInternal b ) | b = 0
+>>
+
+# Subtraction (due to how binary numbers are stored this algorithm works)
+<< - return a b // return = a + ! b + 1 >>
+
+# Shorthand addition
+<< ++ return param // return = param + 1 >>
+# Shorthand subtraction
+<< -- return param // return = param - 1 >>
+
+# Multiplication
+<< * return a b //
+    # Call the internal multiplication function
+    multiplyInternal a b result = 0
+    return = result
+>>
+
+# Multiplication internal
+<< multiplyInternal return a b result // return = 1 // 
+    # If least significant bit of 'b' is set, add 'a' to result.
+    # Then, shift 'a' left (times two) and 'b' right (divide two)
+    # Repeat until 'b' is 0
+
+    # True if least significant bit of 'b' is true
+    lsBit = 1 == ( 1 & b )
+    # If lsBit is not 0, add 'a' to the result
+    ( result + a ) | lsBit = 0
+
+    a = <- a
+    b = -> b
+
+    # Recurse until the result is calculated
+    ( multiplyInternal a b result ) | b = 0
+>>
+
+# Division function
+# The parameters are structured to solve the equation 'a / b = c'
+# The division result is calculated using a binary search (I wrote this myself so it's likely not the 'proper' algorithm)
+<< div c a b //
+    # Make an initial guess on the division result
+    # The larger b is, the smaller the result will be (hence start from a smaller guess)
+    guess = MostSignificantBit ->> <-> b
+    # Guess is changed by half of the guess each iteration
+    guessChange = -> guess
+
+    # Run the method to check (and update) the guess until the equation is solved
+    c = divInternalCheck a b guess guessChange
+
+    # Check to catch a case in the algorithm where the result is 1 too large
+    result = b * c
+    tooLarge = result > a
+    # If the result is too large, subtract by 1
+    c = ( tooLarge & ( c - 1 ) ) | ( ! tooLarge & c )
+>>
+
+# Function to check a division guess
+<< divInternalCheck return a b guessOfC guessChange // 
+    # Calculate the result of the guess
+    guessResult = b * guessOfC
+
+    # Check the guess (and that we haven't reached the end of the binary search space)
+    correctGuess = a == guessResult
+    guessChangeIsEnough = guessChange > 0
+    makeNewGuess = ! correctGuess & guessChangeIsEnough
+
+    # If we need to make a new guess, do so
+    ( divInternalGuess a b guessOfC guessResult guessChange ) | 0 = makeNewGuess
+
+    # We have found the correct value
+    return = guessOfC
+>>
+
+# Function to make a new division guess
+<< divInternalGuess return a b guessOfC guessResult guessChange // //
+    # If the guess is too big, make it smaller, and vice versa
+    # Get a value which is true if the guess is too big
+    guessIsTooBig = guessResult > a
+
+    # Update the guess by the guess change, by either making it larger or smaller
+    guessOfC = ( guessIsTooBig & ( guessOfC - guessChange ) ) | ( ! guessIsTooBig & ( guessOfC + guessChange ) )
+
+    # Halve the guess change value
+    guessChange = -> guessChange
+
+    # Check the newly generated guess
+    guessOfC = divInternalCheck a b guessOfC guessChange
+>>
+
+# Modulo function
+<< % return a b //
+    return = a - ( a div b ) * b
+>>
+
+# Power function. Raise 'a' to the power of 'b'
+# This algorithm just multiplies 'a' 'b' times, so will be very slow for large values of 'b'
+<< ** return a b //
+    # Clamp the power value to be above 0 (we only deal in integers)
+    times = b >=| 0
+
+    base = a
+    # Default result of 1
+    result = 1
+    # If the power is not 0, call the internal function
+    ( base powerInternal result ) | 0 = times
+
+    return = result
+>>
+
+<< powerInternal times base result // //
+    result = result * base
+    times = times - 1
+    # Recursively call this function until times is 0
+    ( base powerInternal result ) | 0 = times
+>>
+
+# Clamp the provided value within the specified limit (only supports positive values)
+<< Clamp return value min max // return = ( value <=| max ) >=| min >>
+
+# Clamp below or to max value
+<< <=| return toClamp maxValue //
+    lessThan = toClamp < maxValue
+    return = ( toClamp & lessThan ) | ( maxValue & ! lessThan )
+>>
+
+# Clamp above or to min value
+<< >=| return toClamp minValue //
+    greaterThan = toClamp > minValue
+    return = ( toClamp & greaterThan ) | ( minValue & ! greaterThan )
+>>
+
+# Return the positive value of 'param'
+<< +ve return param //
+    isNegative = is-ve param
+    return = ( ( ( ( ! param ) + 1 ) & isNegative ) | ( param & ! isNegative ) )
+>>
+
+
+# --- Conditional Checks ---
+# Equality checking
+<< == return leftHS rightHS //
+    xor = leftHS ^ rightHS
+    # Default return to true, but set it to 0 if LHS and RHS are not equal
+    return = !
+    return | xor = 0
+>>
+
+<< != return leftHS rightHS // return = ! ( leftHS == rightHS ) >>
+
+# Less than
+<< < return leftHS rightHS //
+    shifted = leftHS - rightHS
+    # If shifted is less than 0, return true
+    return = ( shifted & MostSignificantBit ) == MostSignificantBit
+>>
+
+# Less than or equal to
+<< <= return leftHS rightHS // return = ( leftHS < rightHS ) | ( leftHS == rightHS ) >>
+
+# Greater than (note, it builds off of previous functions)
+<< > return leftHS rightHS // return = ! ( leftHS <= rightHS ) >>
+
+# Greater than or equal to
+<< >= return leftHS rightHS // return = ! ( leftHS < rightHS ) >>
+
+# Is negative function
+<< is-ve return param //
+    return = ( MostSignificantBit & param ) == MostSignificantBit
+>>
+
+
+# --- Printing to the terminal ---
+# Output binary value as a user friendly decimal number
+<<  _# valueOut // //
+    # Output '-' first if the number is negative
+    _ ( 10 & ! is-ve valueOut ) = 00101101    # -
+
+    # Make the value positive
+    valueOut = +ve valueOut
+
+    BinaryToDecimalInternal = valueOut 
+>>
+
+# Print out each numerical digit of the input
+<< BinaryToDecimalInternal value lastCount // //
+    store = value
+    # Call the function to bring the number down, if its too big
+    ( BringToWithin0To9Internal value count ) | 0 = value > 1001
+
+    # Print out lastCount - count - 1 zeroes, unless lastCount is 0
+    # This is to catch any zeroes in the middle of the number which otherwise get skipped.
+    PrintZeroes ( ( lastCount != 0 ) & ( ( lastCount - count ) - 1 ) ) = 0
+
+    # Output the digit
+    BinaryToDecimalSingleDigitInternal value
+
+    # Remove the digit we just output from the value
+    store = store - ( value * ( 1010 ** count ) )
+
+    # While the value we are working with is not 0, recall this function
+    BinaryToDecimalInternal count | 0 = store
+
+    # If store is 0, print out count amount of zeroes
+    PrintZeroes count | 0 = ( count != 0 ) & ( store == 0 )
+>>
+
+# Calculate how many digits will need to be printed
+# Counts how many divisions by 10 are needed to get a value in the range 0-9
+# 'void' parameter means the function is called via 'Func param1 param2' instead of 'param1 Func param2' since there are now three parameters
+<< BringToWithin0To9Internal return value count void // //
+    # Divide value by 10 (decimal)
+    value = value div 1010
+    count = count + 1
+    
+    # If the number is not small enough yet, recall this function
+    ( BringToWithin0To9Internal value count ) | 0 = value > 1001
+>>
+
+# Converts a binary number in the range 0 to 9 (both inclusive) to its Ascii equivalent
+# Im sure theres a smarter way to do this, by looping and addition rather than hardcoded, but it works
+<< BinaryToDecimalSingleDigitInternal return param // 
+    _ = ( 00110000 & 0000 == param ) | ( 00110001 & 0001 == param ) | ( 00110010 & 0010 == param ) | ( 00110011 & 0011 == param ) | ( 00110100 & 0100 == param ) | ( 00110101 & 0101 == param ) | ( 00110110 & 0110 == param ) | ( 00110111 & 0111 == param ) | ( 00111000 & 1000 == param ) | ( 00111001 & 1001 == param )
+>>
+
+# Prints the given number of zeros
+<< PrintZeroes return count // //
+    # If count is above 0, print out some zeroes
+    countInternal = count >=| count
+    PrintZeroesInternal countInternal | 0 = countInternal
+>>
+
+<< PrintZeroesInternal return count // // 
+    # Print a zero
+    _ = 00110000
+
+    count = count - 1
+
+    # Recursively call this function until count is 0
+    PrintZeroesInternal count | 0 = count
+>>
+
+# Prints out a newline, designed as a shorthand
+<< _\n // // _ = 1010 >>
+
+
+# Fun stuff to just use the language
+# Sieve of Eratosthenes (find prime numbers)
+<< SieveOfEratosthenes count // //
+    GenerateNumbers count = Offset
+    Offset FindNumbers count = 0
+    PrintNumbers count = Offset
+>>
+
+# Method to find all the primes. This is the core of the algorithm
+<< FindNumbers return startIndex count // //
+    # Get the next value from global memory
+    ( nextPrime NextNonZeroNumber locationIndex ) = startIndex
+
+    squareOfPrime = nextPrime * nextPrime
+
+    # If the square is less than count, eliminate the appropriate values
+    ( nextPrime MarkNotPrime ( count + Offset ) ) | 0 = ( locationIndex + nextPrime ) & ( squareOfPrime <= count )
+
+    # If the square is less than the count, recall this function
+    ( ++ startIndex FindNumbers count ) | 0 = squareOfPrime < count
+>>
+
+# Method to mark values as not prime
+<< MarkNotPrime index jumpAmount maxCount // //
+    ? index = 0
+
+    # While index is less than maxCount, recall this while incrementing the index
+    ( jumpAmount MarkNotPrime maxCount ) | 0 = ( index + jumpAmount ) & ( index <= maxCount )
+>>
+
+# Find the next value in global memory which isn't zero starting from startIndex.
+# This method has no end bound checking
+<< NextNonZeroNumber index result indexOut // //
+    result = ? index
+    # Send the last index we looked at (the result index) back through the call stack
+    indexOut = index
+    # While the result is 0, go to the next number
+    ( result NextNonZeroNumber indexOut ) | 0 = ++ index & ( result == 0 )
+>>
+
+# Generates the numbers from 2 to count, writing them to global memory starting at index
+<< GenerateNumbers index maxCount // // 
+    10 GenerateNumbersInternal maxCount = index
+>>
+
+# Internal method to generate numbers
+<< GenerateNumbersInternal index number maxCount // // 
+    # Set the number to the provided index
+    ? index = number
+    # While number is less than or equal to max count, recall this function
+    ( ++ number GenerateNumbersInternal maxCount ) | 0 = ++ index & number < maxCount
+>>
+
+# Method to print all the non zero numbers starting at index, through to maxCount
+# This method does try to print one too many values, which isn't a big problem because nothing is after the 'allocated' memory
+<< PrintNumbers index maxCount // // 
+    PrintNumbersInternal ( maxCount + index ) = index
+>>
+
+# Internal method to print numbers
+<< PrintNumbersInternal index maxCount // //
+    # If the value at index is not 0, print it out as a decimal and a newline
+    ( _# & _\n ) | 0 = ? index
+
+    index = ++ index
+    # While index is less than or equal to maxCount, recall this function
+    PrintNumbersInternal maxCount | 0 = index & index < maxCount
+>>
+
+# Program results stuff
+SieveOfEratosthenes = 100000     # 32 in decimal

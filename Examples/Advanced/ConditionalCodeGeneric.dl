@@ -1,0 +1,57 @@
+# This file is complicated, and relies on a few higher level concepts. PROCEED WITH CAUTION
+# What it actually does is output what the user types, until the enter key is pressed. Then its stops
+# It is designed more as a demo than a complete program to be run
+
+# This function is to do nothing. It has an ID so that I can call it with reflection
+# Its useful for when I dont want to run any code if something is false
+<< Void 1 >>
+
+# These are two function wrappers for global variables
+<< Flag value // value = ? 1 // ? 1 = value >>
+<< ConditionalValue value // value = ? 10 // ? 10 = value >>
+
+# When this function is set to, set the flag to false. When its retrieved from set it to true instead
+# Used when running conditional code, resets whenever it is retrieved from
+<< If // Flag = ! // Flag = 0 >>
+
+# Wrapper for the if statement functions, to simplify the if statement
+<< isTrueWrapper return functionID // return = 1 // ConditionalValue = 1 ? functionID >>
+<< isFalseWrapper return functionID // return = ! // ConditionalValue = 1 ? functionID >>
+
+# Function that I can call to do conditional stuff
+# Has no set block, runs only when getting from it
+# If 'inValue' equals 'checkValue' then run the function at 'trueFunctionID' 
+# otherwise run the function at 'falseFunctionID'
+# It expects both of the functions to have no parameters (see above for examples)
+# Then return the result
+<< ifFunction return inValue checkValue trueFunctionID falseFunctionID //
+    # Set the flag (via If) depending on if 'inValue' equals 'checkValue'
+    ( If & ( isFalseWrapper falseFunctionID ) ) | inValue = checkValue
+
+    # If the flag is not set, then call the function
+    ( isTrueWrapper trueFunctionID ) | Flag = 0
+
+    return = ConditionalValue
+>>
+
+# This is a use case for this framework
+<< outputIfNotEnter 10 //
+    # Output a char to console, and store it in a variable
+    _ 1 & input = _
+
+    # If the inputted character does not equal a new line, recall this function
+    # Otherwise, call the void function (which does nothing) to quit
+    ifFunction input 00001010 1 10
+>>
+
+outputIfNotEnter
+
+##
+This is another use case (note, its in a comment so won't be run)
+# Actually call the if statement (see function declaration for parameter names)
+_ = ifFunction 101 101 111 110
+
+# These are the methods I want to conditionally call
+<< ReturnA 110 return // return = 01000001 >>
+<< ReturnB 111 return // return = 01000010 >>
+##

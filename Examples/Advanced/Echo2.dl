@@ -1,0 +1,6 @@
+# This is a recursive program that should simply echo what the user types
+# Each time it is set to, it outputs what the user inputs, and sets to itself again
+
+ECHO = 0 
+
+<< ECHO return // // _ 1 & ECHO = _ >>

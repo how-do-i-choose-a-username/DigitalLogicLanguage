@@ -1,0 +1,59 @@
+# This is loop to count (with the addition code copied in too)
+# The goal of this file is to have a function, which is passed a function ID, parameter start ID and the number of times to run the function
+# Then, it runs the function that amount of times
+
+# XOR function
+<< ^ return param1 param2 // 
+    and = param1 & param2
+    or = param1 | param2
+    return = or & ! and
+>>
+
+# Left shift function (note the use of the bits operator)
+<< <- return param1 // ! 1 : return = param1 >>
+
+# Addition function (recursive)
+<< + return a b //
+    # If b is not 0, call an internal addition function
+    ( a addInternal b ) | b = 0
+
+    # Because we are setting to the internal function, it will set to its parameters
+    return = a
+>>
+
+# Addition internal
+<< addInternal return a b // return = 1 //
+    # Fancy addition algorithm
+    carry = a & b
+    a = a ^ b
+    b = <- carry
+
+    # If B is not 0 yet, recall this function
+    ( a addInternal b ) | b = 0
+>>
+
+
+# Public facing loop function
+<< Loop return functionID parameterID count //
+    # Call the internal loop if count is not 0
+    ( LoopInternal functionID parameterID count ) | count = 0
+>>
+
+# Internal part of the loop, which does the actual looping
+<< LoopInternal return functionID parameterID count //
+    return = 1
+//
+    # Call the getter of the function
+    parameterID ? functionID
+    # Add negative one to the count
+    remainingCount = count + ! 0
+    # If count is not 0, call the function again
+    ( LoopInternal functionID parameterID remainingCount ) | remainingCount = 0
+>>  
+
+# Print A (like it says). Function is defined with the ID 1000
+<< PrintA 1000 // _ = 01000001 >>
+
+# Call the public facing loop function, and run it 100 times
+# Use the parameters in global memory at index 1 (test function has no params, so its ignored)
+Loop 1000 1 1100100
